@@ -1,0 +1,14 @@
+﻿body {
+  background-color:#333;
+}
+
+canvas {
+  width: 100%;
+  height: 100%
+}
+
+#pg {
+  margin:auto;
+  width:800px;
+  height:600px;
+}
