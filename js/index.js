@@ -1,7 +1,7 @@
 ﻿
 var sahne = new THREE.Scene();
 var particles = [];
-var numberOfParticles = 15;
+var numberOfParticles = 250;
 var pg = document.getElementById('pg');
 var genişlik = pg.clientWidth; //window.innerWidth;
 var yükseklik = pg.clientHeight; //window.innerHeight;
@@ -10,7 +10,15 @@ var en_uzak = 1000;
 var bakış_açısı = 75;
 var aspect_ratio = genişlik / yükseklik;
 var kamera = new THREE.PerspectiveCamera(bakış_açısı, aspect_ratio, en_yakın, en_uzak);
+var hedefx = 0, hedefy = 0;
 kamera.position.z = 200;
+
+pg.addEventListener('mousemove', onMousemove);
+pg.addEventListener('click', onClick);
+// IE9, Chrome, Safari, Opera
+pg.addEventListener("mousewheel", onMouseWheel, false);
+// Firefox
+//pg.addEventListener("DOMMouseScroll", onMouseWheel, false);
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize(genişlik, yükseklik);
@@ -29,7 +37,7 @@ sahne.add(ışık);
 function init() {
   for (var i = 0; i < numberOfParticles; i++) {
     var size = Math.random() * 10 + 5;
-    particles[i] = new Particle(genişlik/20 - Math.random() * genişlik/10, yükseklik/20 - Math.random() * yükseklik/10, 0 , size, size, size);
+    particles[i] = new Particle(genişlik/2 - Math.random() * genişlik, yükseklik/2 - Math.random() * yükseklik, 0 , size, size, size);
     sahne.add(particles[i].obj);
   }
 }
@@ -47,6 +55,7 @@ sahne.add(küre);
 var render = function() {
 
   for (var i = 0; i < numberOfParticles; i++) {
+    particles[i].attract(hedefx, hedefy, 0);
     particles[i].integrate();
     particles[i].rotate();
   }
@@ -67,3 +76,33 @@ window.requestAnimFrame = (function() {
   requestAnimFrame(animloop);
   render();
 })();
+
+
+function onClick(e) {
+  explode(10);
+}
+
+function onMousemove(e) {
+  hedefx = (e.offsetX - genişlik/2) / 2;
+  hedefy = (yükseklik/2 - e.offsetY) / 2;
+}
+
+function onMouseWheel(e) {
+  if (e.deltaY>0) {
+    kamera.position.z+=20;
+  } else {
+    kamera.position.z-=20;
+  }
+}
+
+function explode(damping) {
+  var sign1 = 1, sign2 = 1, sign3 = 1;
+  for (var i = 0; i < numberOfParticles; i++) {
+    sign1 = Math.random() >= 0.5 ? 1:-1;
+    sign2 = Math.random() >= 0.5 ? 1:-1;
+    sign3 = Math.random() >= 0.5 ? 1:-1;
+    particles[i].obj.position.x += Math.random() * sign1 * genişlik / damping;
+    particles[i].obj.position.y += Math.random() * sign2 * yükseklik / damping;
+    particles[i].obj.position.z += Math.random() * sign3 * 100 / damping;
+  }
+}

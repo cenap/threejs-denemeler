@@ -1,51 +1,48 @@
 var DAMPING = 0.99;
 
 function Particle(x, y, z, w, h, d) {
-  this.x = this.oldX = x;
-  this.y = this.oldY = y;
-  this.z = this.oldZ = z;
   var geometri = new THREE.BoxGeometry(w, h, d);
   var materyal = new THREE.MeshPhongMaterial({color: 0x1000000+(Math.random())*0xffffff});
   this.obj = new THREE.Mesh(geometri, materyal);
-  this.obj.position.x = x;
-  this.obj.position.y = y;
-  this.obj.position.z = z;
+  this.obj.position.x = this.oldX = x;
+  this.obj.position.y = this.oldY = y;
+  this.obj.position.z = this.oldZ = z;
+  //this.rot = Math.random() / 5;
+  this.rot = 0.01;
+  this.speed = Math.random();
 }
 
 Particle.prototype.integrate = function() {
-  var velocityX = (this.x - this.oldX) * DAMPING;
-  var velocityY = (this.y - this.oldY) * DAMPING;
-  var velocityZ = (this.z - this.oldZ) * DAMPING;
-  this.oldX = this.x;
-  this.oldY = this.y;
-  this.oldZ = this.z;
-  this.x += velocityX;
-  this.y += velocityY;
-  this.z += velocityZ;
-  this.obj.position.x = this.x;
-  this.obj.position.y = this.y;
-  this.obj.position.z = this.z;
+  var velocityX = (this.obj.position.x - this.oldX) * DAMPING * this.speed;
+  var velocityY = (this.obj.position.y - this.oldY) * DAMPING * this.speed;
+  var velocityZ = (this.obj.position.z - this.oldZ) * DAMPING * this.speed;
+    this.oldX = this.obj.position.x;
+    this.oldY = this.obj.position.y;
+    this.oldZ = this.obj.position.z;
+    this.obj.position.x += velocityX;
+    this.obj.position.y += velocityY;
+    this.obj.position.z += velocityZ;
 };
 
-Particle.prototype.attract = function(x, y) {
-  var dx = x - this.x;
-  var dy = y - this.y;
-  var dz = z - this.z;
-  var distance = Math.cbrt(dx * dx + dy * dy + dz * dz);
-  this.x += dx / distance;
-  this.y += dy / distance;
-  this.z += dz / distance;
-  this.obj.position.x = this.x;
-  this.obj.position.y = this.y;
-  this.obj.position.z = this.z;
+Particle.prototype.attract = function(x, y, z) {
+  var dx = x - this.obj.position.x;
+  var dy = y - this.obj.position.y;
+  var dz = z - this.obj.position.z;
+  //var distance = Math.sqrt(dx * dx + dy * dy);
+  var distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+  this.obj.position.x += dx / distance;
+  this.obj.position.y += dy / distance;
+  this.obj.position.z += dz / distance;
 };
 
 Particle.prototype.rotate = function() {
-  this.obj.rotation.x += 0.01;
-  this.obj.rotation.y += 0.01;
-  this.obj.rotation.z += 0.01;
+  this.obj.rotation.x += this.rot;
+  this.obj.rotation.y += this.rot;
+  this.obj.rotation.z += this.rot;
 };
 
-Particle.prototype.move = function() {
-  this.container.move(this.x,this.y);
+Particle.prototype.move = function(x,y,z) {
+  this.obj.position.x = x;
+  this.obj.position.y = y;
+  this.obj.position.z = z;
 };
