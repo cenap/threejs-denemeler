@@ -7,8 +7,8 @@ function Particle(x, y, z, w, h, d) {
   this.obj.position.x = this.oldX = x;
   this.obj.position.y = this.oldY = y;
   this.obj.position.z = this.oldZ = z;
-  //this.rot = Math.random() / 5;
-  this.rot = 0.01;
+  this.rot = Math.random() / 50;
+  //this.rot = 0.01;
   this.speed = Math.random();
 }
 
@@ -30,9 +30,12 @@ Particle.prototype.attract = function(x, y, z) {
   var dz = z - this.obj.position.z;
   //var distance = Math.sqrt(dx * dx + dy * dy);
   var distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-  this.obj.position.x += dx / distance;
-  this.obj.position.y += dy / distance;
-  this.obj.position.z += dz / distance;
+  if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+    this.obj.position.x += dx / distance;
+    this.obj.position.y += dy / distance;
+    this.obj.position.z += dz / distance;
+  }
+  //console.log(x , this.obj.position.x, Math.abs(dx));
 };
 
 Particle.prototype.rotate = function() {
