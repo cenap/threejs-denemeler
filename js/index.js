@@ -1,7 +1,7 @@
 ﻿
 var sahne = new THREE.Scene();
 var particles = [];
-var numberOfParticles = 250;
+var numberOfParticles = 300;
 var pg = document.getElementById('pg');
 var genişlik = pg.clientWidth; //window.innerWidth;
 var yükseklik = pg.clientHeight; //window.innerHeight;
@@ -10,7 +10,7 @@ var en_uzak = 1000;
 var bakış_açısı = 75;
 var aspect_ratio = genişlik / yükseklik;
 var kamera = new THREE.PerspectiveCamera(bakış_açısı, aspect_ratio, en_yakın, en_uzak);
-var hedefx = 0, hedefy = 0;
+var hedefx = 0, hedefy = 0, hedefz = 0, dz=1;
 kamera.position.z = 200;
 
 pg.addEventListener('mousemove', onMousemove);
@@ -55,7 +55,7 @@ sahne.add(küre);
 var render = function() {
 
   for (var i = 0; i < numberOfParticles; i++) {
-    particles[i].attract(hedefx, hedefy, 0);
+    particles[i].attract(hedefx, hedefy, hedefz);
     particles[i].integrate();
     particles[i].rotate();
   }
@@ -85,6 +85,10 @@ function onClick(e) {
 function onMousemove(e) {
   hedefx = (e.offsetX - genişlik/2) / 2;
   hedefy = (yükseklik/2 - e.offsetY) / 2;
+  hedefz += dz;
+  if (hedefz > 150 || hedefz < -350) {
+    dz = -dz;
+  }
 }
 
 function onMouseWheel(e) {
