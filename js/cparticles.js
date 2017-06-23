@@ -9,7 +9,7 @@ function Particle(x, y, z, w, h, d) {
   this.obj.position.z = this.oldZ = z;
   this.rot = Math.random() / 50;
   //this.rot = 0.01;
-  this.speed = Math.random();
+  this.speed = 0.2 + Math.random();
 }
 
 Particle.prototype.integrate = function() {
@@ -48,4 +48,13 @@ Particle.prototype.move = function(x,y,z) {
   this.obj.position.x = x;
   this.obj.position.y = y;
   this.obj.position.z = z;
+};
+
+Particle.prototype.animate = function() {
+  this.obj.position.x += this.speed;
+  if (this.obj.position.x>300) {
+    this.obj.position.x = -300;
+  }
+  //this.obj.position.y += this.speed;
+  //this.obj.position.z += this.speed;
 };

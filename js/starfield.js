@@ -61,7 +61,7 @@ var ışık = new THREE.PointLight(0xffffff);
 sahne.add(ışık);
 
 
-function init() {
+function initAsCube() {
   var size = 4, row = 0, col = 0, floor=0;
   for (var i = 0; i < numberOfParticles; i++) {
     if (i%size==0) {
@@ -79,15 +79,15 @@ function init() {
     sahne.add(particles[i].obj);
   }
 }
-/*
+
 function init() {
   for (var i = 0; i < numberOfParticles; i++) {
     var size = Math.random() * 10 + 5;
-    particles[i] = new Particle(genişlik/2 - Math.random() * genişlik, yükseklik/2 - Math.random() * yükseklik, 0 , size, size, size);
+    particles[i] = new Particle(genişlik/2 - Math.random() * genişlik, yükseklik/2 - Math.random() * yükseklik, Math.random() * 50 , size, size, size);
     sahne.add(particles[i].obj);
   }
 }
-*/
+
 init();
 
 /*
@@ -111,6 +111,7 @@ window.requestAnimFrame = (function() {
 var render = function() {
   for (var i = 0; i < numberOfParticles; i++) {
     particles[i].rotate();
+    particles[i].animate();
   }
   setCamera();
   renderer.render(sahne, kamera);
