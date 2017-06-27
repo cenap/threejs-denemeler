@@ -73,11 +73,12 @@ function initFont(txt="TURNA TEKNOLOJİ") {
 }
 
 function initListeners() {
+  window.addEventListener( 'resize', onWindowResize, false );
+  /*
   pg.addEventListener('mousemove', onMousemove);
   pg.addEventListener('click', onClick);
   pg.addEventListener("mousewheel", onMouseWheel, false);  // IE9, Chrome, Safari, Opera
   pg.addEventListener("DOMMouseScroll", onMouseWheel, false); // Firefox
-  window.addEventListener( 'resize', onWindowResize, false );
 
   document.onkeydown = function(e) {
 
@@ -101,6 +102,7 @@ function initListeners() {
     }
   }
 
+
   function onClick(e) {
     explode(10);
   }
@@ -119,6 +121,7 @@ function initListeners() {
       //kamera.position.y -= 10;
     }
   }
+  */
 }
 
 
