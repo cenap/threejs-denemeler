@@ -1,9 +1,10 @@
 var DAMPING = 0.99;
 
-function Particle(x, y, z, w, h, d) {
-  var geometri = new THREE.BoxGeometry(w, h, d);
-  var materyal = new THREE.MeshPhongMaterial({color: 0x1000000+(Math.random())*0xffffff});
-  this.obj = new THREE.Mesh(geometri, materyal);
+function Particle(geometry,material, x, y, z) {
+
+  this.obj = new THREE.Mesh(geometry, material);
+  this.obj.castShadow = true;
+  this.obj.receiveShadow = true;
   this.obj.position.x = this.oldX = x;
   this.obj.position.y = this.oldY = y;
   this.obj.position.z = this.oldZ = z;
@@ -50,11 +51,11 @@ Particle.prototype.move = function(x,y,z) {
   this.obj.position.z = z;
 };
 
-Particle.prototype.animate = function() {
+Particle.prototype.animate = function(w,h) {
   this.obj.position.x += this.speed;
-  if (this.obj.position.x>300) {
-    this.obj.position.x = -300;
+  if (this.obj.position.x> w) {
+    this.obj.position.x = -w;
   }
-  //this.obj.position.y += this.speed;
-  //this.obj.position.z += this.speed;
+  this.obj.position.y += Math.sin(this.speed * this.obj.position.x/20)/10;
+  //this.obj.position.z = 200 - 50*Math.cos(this.speed * this.obj.position.x/10);
 };
