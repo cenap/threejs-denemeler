@@ -56,8 +56,6 @@ Particle.prototype.animate = function(w,h) {
   if (this.obj.position.x> w) {
     this.obj.position.x = -w;
   }
-  //this.obj.position.y += Math.sin(this.speed * this.obj.position.x/20)/10;
-  //this.obj.position.z = 200 - 50*Math.cos(this.speed * this.obj.position.x/10);
-  this.obj.position.y += sin[Math.floor(this.speed * this.obj.position.x/10)]/3;
-  //this.obj.position.z = 200 - 50*cos[this.speed * this.obj.position.x/10];
+  this.obj.position.y += sin(this.speed * this.obj.position.x * 6)/3;
+  //this.obj.position.z = 200 - 50*cos(this.speed * this.obj.position.x/10);
 };

@@ -4,7 +4,6 @@ var particles = [];
 var numberOfParticles = 100;
 var pg = document.getElementById('pg');
 var mb = document.getElementById('mb');
-var cos=[],sin=[];
 var genişlik = window.innerWidth, yükseklik = window.innerHeight;
 var en_yakın = 400;
 var en_uzak = 1000;
@@ -21,7 +20,6 @@ var renderer = new THREE.WebGLRenderer();
 var textureLoader = new THREE.TextureLoader();
 var fontLoader = new THREE.FontLoader();
 
-initTrigonometryTables()
 onWindowResize();
 initRenderer();
 initListeners();
@@ -32,13 +30,6 @@ initPlanes();
 initFont();
 initCube();
 initStarfield();
-
-function initTrigonometryTables() {
-  for (var i = -3600; i <= 3600; i++) {
-    cos[i] = Math.sin(i * (Math.PI / 180));
-    sin[i] = Math.sin(i * (Math.PI / 180));
-  }
-}
 
 function initCamera() {
   kamera.position.x = 0;
@@ -336,8 +327,8 @@ var render = function() {
 function animateLetters() {
   if (teta++>360) {teta = 0;}
   for (var i = 0; i < letters.length; i++) {
-    letters[i].position.y = 40 * sin[teta + i * 30];
-    letters[i].position.z = 5*sin[teta + i * 20];
+    letters[i].position.y = 40 * sin(teta + i * 30);
+    letters[i].position.z = 5*sin(teta + i * 20);
     letters[i].rotation.x = letters[i].position.z / 3 ;
   }
 }
