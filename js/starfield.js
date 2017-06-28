@@ -4,6 +4,7 @@ var particles = [];
 var numberOfParticles = 100;
 var pg = document.getElementById('pg');
 var mb = document.getElementById('mb');
+var cos=[],sin=[];
 var genişlik = window.innerWidth, yükseklik = window.innerHeight;
 var en_yakın = 400;
 var en_uzak = 1000;
@@ -20,6 +21,7 @@ var renderer = new THREE.WebGLRenderer();
 var textureLoader = new THREE.TextureLoader();
 var fontLoader = new THREE.FontLoader();
 
+initTrigonometryTables()
 onWindowResize();
 initRenderer();
 initListeners();
@@ -31,6 +33,12 @@ initFont();
 initCube();
 initStarfield();
 
+function initTrigonometryTables() {
+  for (var i = -3600; i <= 3600; i++) {
+    cos[i] = Math.sin(i * (Math.PI / 180));
+    sin[i] = Math.sin(i * (Math.PI / 180));
+  }
+}
 
 function initCamera() {
   kamera.position.x = 0;
@@ -45,7 +53,7 @@ function initFog() {
   sahne.fog.color.setHSL(0.51, 0.6, 0.6);
 }
 
-function initFont(txt="TURNA TEKNOLOJİ") {
+function initFont(txt="TURNA") {
   txtgroup = new THREE.Object3D();
   fontLoader.load( 'fonts/Titillium_Bold.json', function ( font ) {
     for (var i = 0, len = txt.length; i < len; i++) {
@@ -224,7 +232,7 @@ function initCube() {
 function initStarfield() {
   for (var i = 0; i < numberOfParticles; i++) {
     var material = new THREE.MeshPhongMaterial({color: 0x1000000+(Math.random())*0xffffff, specular: 0xffccaa, shininess: 15});
-    var size = 1 + Math.random()*20;
+    var size = 1 + Math.random()*5;
     var geometry = new THREE.SphereGeometry(size, 14, 14);
     particles[i] = new Particle(geometry, material,
                                 genişlik / 2 - Math.random() * genişlik,
@@ -328,9 +336,9 @@ var render = function() {
 function animateLetters() {
   if (teta++>360) {teta = 0;}
   for (var i = 0; i < letters.length; i++) {
-    letters[i].position.y = 40 * Math.sin((teta + i * 30) * (Math.PI / 180));
-    letters[i].position.z = Math.sin((teta + i * 10) * (Math.PI / 180));
-    letters[i].rotation.x = letters[i].position.z / 5 ;
+    letters[i].position.y = 40 * sin[teta + i * 30];
+    letters[i].position.z = 5*sin[teta + i * 20];
+    letters[i].rotation.x = letters[i].position.z / 3 ;
   }
 }
 

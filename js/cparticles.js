@@ -10,19 +10,19 @@ function Particle(geometry,material, x, y, z) {
   this.obj.position.z = this.oldZ = z;
   this.rot = Math.random() / 50;
   //this.rot = 0.01;
-  this.speed = 0.2 + Math.random();
+  this.speed = 0.1 + Math.random();
 }
 
 Particle.prototype.integrate = function() {
   var velocityX = (this.obj.position.x - this.oldX) * DAMPING * this.speed;
   var velocityY = (this.obj.position.y - this.oldY) * DAMPING * this.speed;
   var velocityZ = (this.obj.position.z - this.oldZ) * DAMPING * this.speed;
-    this.oldX = this.obj.position.x;
-    this.oldY = this.obj.position.y;
-    this.oldZ = this.obj.position.z;
-    this.obj.position.x += velocityX;
-    this.obj.position.y += velocityY;
-    this.obj.position.z += velocityZ;
+  this.oldX = this.obj.position.x;
+  this.oldY = this.obj.position.y;
+  this.oldZ = this.obj.position.z;
+  this.obj.position.x += velocityX;
+  this.obj.position.y += velocityY;
+  this.obj.position.z += velocityZ;
 };
 
 Particle.prototype.attract = function(x, y, z) {
@@ -56,6 +56,8 @@ Particle.prototype.animate = function(w,h) {
   if (this.obj.position.x> w) {
     this.obj.position.x = -w;
   }
-  this.obj.position.y += Math.sin(this.speed * this.obj.position.x/20)/10;
+  //this.obj.position.y += Math.sin(this.speed * this.obj.position.x/20)/10;
   //this.obj.position.z = 200 - 50*Math.cos(this.speed * this.obj.position.x/10);
+  this.obj.position.y += sin[Math.floor(this.speed * this.obj.position.x/10)]/3;
+  //this.obj.position.z = 200 - 50*cos[this.speed * this.obj.position.x/10];
 };
