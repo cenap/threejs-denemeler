@@ -13,7 +13,7 @@ var kamera = new THREE.PerspectiveCamera(bakış_açısı, aspect_ratio, en_yak�
 var hedefx = 0, hedefy = 0, hedefz = 0, dz=1;
 var renderer;
 
-
+DAMPING = 0.80;
 
 function initRenderer() {
   renderer = new THREE.WebGLRenderer();
@@ -48,7 +48,7 @@ function initCamera() {
   kamera.position.x = 0;
   kamera.position.y = 0;
   kamera.position.z = 200;
-  kamera.zoom = 3.0;
+  kamera.zoom = 1.0;
   kamera.updateProjectionMatrix();
 }
 
