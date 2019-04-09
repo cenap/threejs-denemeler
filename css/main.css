@@ -19,3 +19,30 @@
   border: 1px solid #000;
   color: #EEE;
 }
+
+.container {
+  padding: 50px;
+  color: #CCC;
+}
+
+.container a {
+  color: #559;
+}
+
+.container .header h3 {
+  text-align: center;
+}
+
+.container .row {
+  display: flex;
+}
+
+.container .header.col {
+  background-color: #444;
+  font-weight: bold;
+}
+
+.container .row .col {
+  padding: 10px 20px;
+  flex:1 1;
+}
