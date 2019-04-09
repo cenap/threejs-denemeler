@@ -16,20 +16,34 @@ var kamera = new THREE.PerspectiveCamera(bakış_açısı, aspect_ratio, en_yak�
 var renderer = new THREE.WebGLRenderer();
 var textureLoader = new THREE.TextureLoader();
 var fontLoader = new THREE.FontLoader();
+var controls ;
 
 onWindowResize();
 initRenderer();
 initListeners();
 initCamera();
+initControls();
 initLights();
 initContainer();
 initPlanes();
 initFont();
+initObj();
+
+
+function initControls() {
+  controls = new THREE.OrbitControls(kamera, pg);
+  controls.target.set(0, 5, 0);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.25;
+  controls.enableZoom = true;
+  controls.autoRotate = true;
+  controls.update();
+}
 
 function initCamera() {
   kamera.position.x = 0;
   kamera.position.y = 0;
-  kamera.position.z = 800;
+  kamera.position.z = 0;
   kamera.zoom = 3.0;
   kamera.updateProjectionMatrix();
 }
@@ -62,6 +76,7 @@ function initFont(txt="TURNA") {
     }
     txtgroup.position.x = 0;
     txtgroup.position.y = -60;
+    txtgroup.position.z = 0;
     sahne.add( txtgroup );
   });
 }
@@ -119,19 +134,6 @@ function initContainer() {
 function initPlanes() {
   var g = new THREE.PlaneGeometry(genişlik, yükseklik);
 
-  textureLoader.load('img/turnateknoloji.png', function(texture) {
-    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    texture.offset.set( 0, 0 );
-    texture.repeat.set( 8, 8 );
-    var m = new THREE.MeshPhongMaterial({map: texture, overdraw: 0.5 });
-    //var m = new THREE.MeshPhongMaterial({color: 0xffff00,side: THREE.DoubleSide});
-    p1 = new THREE.Mesh(g, m);
-    p1.castShadow = false;
-    p1.receiveShadow = true;
-    p1.position.z = -80;
-    sahne.add(p1);
-  });
-
   textureLoader.load('img/floor_texture02.jpg', function(texture) {
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
     texture.offset.set( 0, 0 );
@@ -162,6 +164,7 @@ window.requestAnimFrame = (function() {
 
 var render = function() {
   setCamera();
+  controls.update();
   renderer.render(sahne, kamera);
 };
 
@@ -198,4 +201,31 @@ function onWindowResize() {
 function display(m) {
   mb.style.zIndex = 10;
   mb.innerHTML = m;
+}
+
+
+function initObj(){
+  const gltfLoader = new THREE.GLTFLoader();
+  gltfLoader.load('models/ring/scene.gltf', (gltf) => {
+    gltf.scene.scale.set(60, 60, 60);
+    const ring = gltf.scene;
+    ring.position.x = 5;
+    ring.position.z = 0;
+    sahne.add(ring);
+
+    // compute the box that contains all the stuff
+    // from root and below
+    const box = new THREE.Box3().setFromObject(ring);
+
+    const boxSize = box.getSize(new THREE.Vector3()).length();
+    const boxCenter = box.getCenter(new THREE.Vector3());
+
+    kamera.lookAt(boxCenter.x, boxCenter.y, boxCenter.z);
+
+    // update the Trackball controls to handle the new size
+    controls.maxDistance = boxSize * 10;
+    controls.target.copy(boxCenter);
+    controls.update();
+
+  });
 }
