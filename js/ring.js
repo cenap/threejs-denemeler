@@ -9,7 +9,6 @@ var bakış_açısı = 90;
 var aspect_ratio = genişlik / yükseklik;
 var hedefx = 0, hedefy = 0;
 var teta = 0;
-var p1,p2;
 var cube;
 var txtgroup, letters = [];
 var kamera = new THREE.PerspectiveCamera(bakış_açısı, aspect_ratio, en_yakın, en_uzak);
@@ -24,7 +23,6 @@ initListeners();
 initCamera();
 initControls();
 initLights();
-initContainer();
 initPlanes();
 initFont();
 initObj();
@@ -36,15 +34,17 @@ function initControls() {
   controls.enableDamping = true;
   controls.dampingFactor = 0.25;
   controls.enableZoom = true;
-  controls.autoRotate = true;
+  controls.autoRotate = false;
   controls.update();
 }
 
 function initCamera() {
-  kamera.position.x = 0;
-  kamera.position.y = 0;
-  kamera.position.z = 0;
-  kamera.zoom = 3.0;
+  setCamera();
+}
+
+function setCamera(x = 0, y = 200, z = 600, lx = 0, ly = 0, lz = 0) {
+  kamera.position.set(x,y,z);
+  kamera.lookAt(new THREE.Vector3(lx, ly, lz));
   kamera.updateProjectionMatrix();
 }
 
@@ -116,21 +116,6 @@ function initLights() {
 }
 
 
-
-
-function initContainer() {
-  const box_geometry = new THREE.BoxGeometry(genişlik, yükseklik, 100);
-  var geometri = new THREE.EdgesGeometry(box_geometry);
-  var materyal = new THREE.LineBasicMaterial({
-    color: 0xffffff,
-    linewidth: 2,
-    linecap: 'round',
-    linejoin: 'round'
-  });
-  var container = new THREE.LineSegments(geometri, materyal);
-  sahne.add(container);
-}
-
 function initPlanes() {
   var g = new THREE.PlaneGeometry(genişlik, yükseklik);
 
@@ -140,18 +125,14 @@ function initPlanes() {
     texture.repeat.set( 8, 4 );
     var m = new THREE.MeshPhongMaterial({map: texture, overdraw: 0.5 });
     //var m = new THREE.MeshPhongMaterial({color: 0xffff00,side: THREE.DoubleSide});
-    p2 = new THREE.Mesh(g, m);
-    p2.castShadow = false;
-    p2.receiveShadow = true;
-    p2.position.y = -100;
-    p2.rotation.x = -1.48;
-    sahne.add(p2);
+    let zemin = new THREE.Mesh(g, m);
+    zemin.castShadow = false;
+    zemin.receiveShadow = true;
+    zemin.position.y = -100;
+    zemin.rotation.x = -1.48;
+    sahne.add(zemin);
   });
-
-
 }
-
-
 
 window.requestAnimFrame = (function() {
   return window.requestAnimationFrame ||
@@ -163,7 +144,6 @@ window.requestAnimFrame = (function() {
 })();
 
 var render = function() {
-  setCamera();
   controls.update();
   renderer.render(sahne, kamera);
 };
@@ -179,14 +159,6 @@ function zoom(zoomin = true) {
   } else {
     kamera.zoom -= 0.05;
   }
-  kamera.updateProjectionMatrix();
-}
-
-
-function setCamera(x = 0, y = 0, z = 800, lx = 0, ly = 1, lz = 0) {
-  kamera.position.set(x,y,z);
-  kamera.up = new THREE.Vector3(0, 0, 1);
-  kamera.lookAt(new THREE.Vector3(lx, ly, lz));
   kamera.updateProjectionMatrix();
 }
 
@@ -207,14 +179,14 @@ function display(m) {
 function initObj(){
   const gltfLoader = new THREE.GLTFLoader();
   gltfLoader.load('models/ring/scene.gltf', (gltf) => {
-    gltf.scene.scale.set(60, 60, 60);
+    gltf.scene.scale.set(100, 100, 100);
     const ring = gltf.scene;
-    ring.position.x = 5;
+    ring.position.x = 0;
+    ring.position.y = 10;
     ring.position.z = 0;
+    ring.castShadow = true;
     sahne.add(ring);
-
-    // compute the box that contains all the stuff
-    // from root and below
+/*
     const box = new THREE.Box3().setFromObject(ring);
 
     const boxSize = box.getSize(new THREE.Vector3()).length();
@@ -226,6 +198,6 @@ function initObj(){
     controls.maxDistance = boxSize * 10;
     controls.target.copy(boxCenter);
     controls.update();
-
+*/
   });
 }
