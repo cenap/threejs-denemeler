@@ -184,7 +184,6 @@ function initObj(){
     ring.position.x = 0;
     ring.position.y = 10;
     ring.position.z = 0;
-    ring.castShadow = true;
     sahne.add(ring);
 /*
     const box = new THREE.Box3().setFromObject(ring);
